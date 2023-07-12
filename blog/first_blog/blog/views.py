@@ -3,7 +3,8 @@ from .models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from .forms import EmailPostForm
-
+from django.core.mail import send_mail
+from django.views.decorators.http import require_POST
 def post_share(request, post_id):
     # Извлечь пост по идентификатору id
     post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
