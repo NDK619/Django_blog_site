@@ -5,28 +5,31 @@ from django.views.generic import ListView
 from .forms import EmailPostForm
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
+
+
 def post_share(request, post_id):
     # Извлечь пост по идентификатору id
     post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
     sent = False
 
     if request.method == 'POST':
-    # Форма была передана на обработку
+        # Форма была передана на обработку
         form = EmailPostForm(request.POST)
         if form.is_valid():
-    # Поля формы успешно прошли валидацию
+            # Поля формы успешно прошли валидацию
             cd = form.cleaned_data
-    # ... отправить электронное письмо
+        # ... отправить электронное письмо
         post_url = request.build_absolute_uri(post.get_absolute_url())
         subject = f"{cd['name']} recommends you read " \
-              f"{post.title}"
+                  f"{post.title}"
         message = f"Read {post.title} at {post_url}\n\n" \
-              f"{cd['name']}\'s comments: {cd['comments']}"
+                  f"{cd['name']}\'s comments: {cd['comments']}"
         send_mail(subject, message, 'v07191699@gmail.com', [cd['to']])
         sent = True
     else:
         form = EmailPostForm()
     return render(request, 'blog/post/share.html', {'post': post, 'form': form, 'sent': sent})
+
 
 class PostListView(ListView):
     """
@@ -55,8 +58,8 @@ def post_list(request):
         posts = paginator.page(paginator.num_pages)
 
     return render(request,
-                 'blog/post/list.html',
-                 {'posts': posts})
+                  'blog/post/list.html',
+                  {'posts': posts})
 
 
 def post_detail(request, year, month, day, post):
