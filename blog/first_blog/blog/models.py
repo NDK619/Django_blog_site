@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 # Create your models here.
 class DraftedManager(models.Manager):
@@ -18,6 +19,8 @@ class Post(models.Model):
 	class Status(models.TextChoices):
  		DRAFT = 'DF', 'Draft'
  		PUBLISHED = 'PB', 'Published'
+	# создаем менеджер тегов
+	tags = TaggableManager()
 
 	# title - поле заголовка поста
 	title = models.CharField(max_length=250)
